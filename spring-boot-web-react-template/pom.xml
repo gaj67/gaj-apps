@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>gaj.apps.text</groupId>
-    <artifactId>gaj-text-web</artifactId>
+    <artifactId>spring-boot-web-react-template</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <description>
-        Web tool for text analysis
+        Template web application using Spring Boot and React.
     </description>
 
     <parent>
