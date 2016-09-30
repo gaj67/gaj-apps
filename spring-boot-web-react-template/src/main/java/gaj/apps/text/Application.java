@@ -1,4 +1,4 @@
-package your.company.name;
+package gaj.apps.text;
 
 
 import org.springframework.boot.SpringApplication;
