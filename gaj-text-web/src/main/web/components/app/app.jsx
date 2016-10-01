@@ -11,7 +11,7 @@ const App = React.createClass({
   render() {
       return (
           <div>
-              <h2>App title goes here</h2>
+              <h2>Text analysis tool</h2>
               <Header/>
               {React.cloneElement(this.props.children, {/** pass state common to all pages here **/})}
           </div>
