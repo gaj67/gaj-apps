@@ -9,8 +9,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.ccil.cowan.tagsoup.jaxp.SAXParserImpl;
 
 import org.apache.commons.io.IOUtils;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import gaj.apps.text.fd.parser.SectionsHandler;
+import gaj.apps.text.fd.parser.UnstructuredData;
 
 /*package-private*/ class FDUtils {
 
@@ -59,5 +69,21 @@ import org.apache.commons.io.IOUtils;
 			return false;
 		}
 	}
+
+    /*package-private*/ static void parseWordFile(Path file, Consumer<UnstructuredData> consumer) {
+        try (InputStream is = Files.newInputStream(file)) {
+            SAXParserImpl parser = SAXParserImpl.newInstance(null);
+            DefaultHandler handler = new SectionsHandler(consumer);
+            parser.parse(is, handler);
+        } catch (IOException | SAXException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    /*package-private*/ static List<UnstructuredData> parseWordFile(Path file) {
+    	List<UnstructuredData> output = new LinkedList<>();
+    	parseWordFile(file, output::add);
+    	return output;
+    }
 
 }
