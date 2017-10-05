@@ -9,16 +9,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-
-import org.ccil.cowan.tagsoup.jaxp.SAXParserImpl;
-
 import org.apache.commons.io.IOUtils;
+import org.ccil.cowan.tagsoup.jaxp.SAXParserImpl;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import gaj.apps.text.fd.parser.SectionsHandler;
 import gaj.apps.text.fd.parser.UnstructuredData;
 
@@ -69,6 +70,45 @@ import gaj.apps.text.fd.parser.UnstructuredData;
 			return false;
 		}
 	}
+
+    /*package-private*/ static FetchSummary fetchWordFile(String word) {
+        Path file = FDUtils.getWordFilePath(word);
+        if (file == null) return FetchSummaryImpl.noPath(word);
+        if (Files.exists(file)) return FetchSummaryImpl.fileFound(word);  
+        try {
+            Files.createDirectories(file.getParent());
+            URL url = new URL(FD_URI + word);
+            URLConnection connection = url.openConnection();
+            connection.setRequestProperty("User-Agent", WEB_USER_AGENTS);
+            try (InputStream fromURL = connection.getInputStream(); OutputStream toFile = Files.newOutputStream(file)) {
+                IOUtils.copy(fromURL, toFile);
+                return FetchSummaryImpl.fileFetched(word);  
+            }
+        } catch (IOException e) {
+            return FetchSummaryImpl.fileNotFetched(word, e.getMessage());  
+        }
+    }
+
+    /*package-private*/ static FetchSummary[] fetchWordFiles(String... words) {
+        Map<String/* word */, FetchSummary> wordSummaries = new HashMap<>();
+        for (String word : words) {
+            if (word == null || word.trim().isEmpty()) continue;
+            FetchSummary wordSummary = wordSummaries.get(word);
+            if (wordSummary == null) {
+                wordSummary = fetchWordFile(word);
+                wordSummaries.put(word, wordSummary);
+            } else {
+                ((FetchSummaryImpl) wordSummary).incWordCount();
+            }
+        }
+        List<String> wordList = new ArrayList<>(wordSummaries.keySet());
+        Collections.sort(wordList);
+        FetchSummary[] result = new FetchSummary[wordList.size()];
+        for (int i = 0; i < wordList.size(); i++) {
+            result[i] = wordSummaries.get(wordList.get(i));
+        }
+        return result;
+    }
 
     /*package-private*/ static void parseWordFile(Path file, Consumer<UnstructuredData> consumer) {
         try (InputStream is = Files.newInputStream(file)) {
