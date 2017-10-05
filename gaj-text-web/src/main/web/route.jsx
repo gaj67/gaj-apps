@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import App from 'components/app/app'
-import About from 'components/app/about'
 import Home from 'components/app/home'
+import Analysis from 'components/app/analysis'
 
 /**
  * 'require("{resource_name}")' statements act as "imports" for assets.
@@ -20,7 +20,7 @@ ReactDOM.render((
 	<Router history={browserHistory}>
 		<Route path="/" component={App}>
 			<IndexRoute component={Home} />
-			<Route path="about" component={About} />
+            <Route path="analysis" component={Analysis} />
 		</Route>
 	</Router>
 ), document.getElementById('app'))

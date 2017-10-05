@@ -15,7 +15,7 @@ const Header = React.createClass({
                     <ul className="nav navbar-nav">
                 		<li><img src={require("components/app/Penfold.gif")} className="logosq"/></li>
                         <li><Link to="/">Home</Link></li>
-                        <li><Link to="/about">About</Link></li>
+                        <li><Link to="/analysis">Analysis</Link></li>
                     </ul>
                 </nav>
             </div>
