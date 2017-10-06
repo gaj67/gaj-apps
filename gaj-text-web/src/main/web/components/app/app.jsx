@@ -6,18 +6,11 @@ import Header from 'components/app/header'
  * The common page elements are rendered here (menus, logos etc).
  * react-router passes the active page contents in 'props.children'.
  */
-const App = React.createClass({
-
-  render() {
-      return (
-          <div>
-              <h2>Text analysis tool</h2>
-              <Header/>
-              {React.cloneElement(this.props.children, {/** pass state common to all pages here **/})}
-          </div>
-      )
-  }
-
-})
+const App = () => (
+    <div>
+        <h2>Text analysis tool</h2>
+        <Header/>
+    </div>
+)
 
 export default App

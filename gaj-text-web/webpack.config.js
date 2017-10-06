@@ -5,7 +5,6 @@ module.exports = {
     entry: './src/main/web/route.jsx',
     devtool: 'sourcemaps',
     cache: true,
-    debug: true,
     output: {
         path: path.join(__dirname, 'src/main/resources/static'),
         filename: 'bundle.js'
@@ -17,14 +16,12 @@ module.exports = {
         ])
     ],
     resolve: {
-        extensions: ['', '.js', '.jsx'],
-        root: [
-            path.join(__dirname, 'src/main/web')
-        ]
+        extensions: ['.js', '.jsx'],
+        modules: [path.join(__dirname, 'src/main/web'), 'node_modules']
     },
     module: {
-        loaders: [
-            {test: path.join(__dirname, 'src/main/web'), loader: 'babel'},
+        rules: [
+            {test: path.join(__dirname, 'src/main/web'), loader: 'babel-loader', query: { presets: ['react'] }},
             {test: /\.styl$/, loaders: ['style-loader', 'css-loader', 'stylus-loader']},
             {test: /\.(gif|png|jpg|svg|ttf|woff|woff2|eot)$/, loader: 'url-loader?limit=8192'}
         ]
