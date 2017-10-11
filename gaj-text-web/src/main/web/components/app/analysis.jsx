@@ -10,14 +10,14 @@ class Analysis extends React.Component {
         };
         
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleAnalysis = this.handleAnalysis.bind(this);
     }
     
     handleChange(event) {
         this.setState({input: event.target.value});
     }
     
-    handleSubmit(event) {
+    handleAnalysis(event) {
         alert('Text submitted: ' + this.state.input);
         event.preventDefault();
         this.setState({output: this.state.input});
@@ -35,7 +35,7 @@ class Analysis extends React.Component {
     
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={e => e.preventDefault()}>
                 <div>
                     <label>Text input:</label>
                     <br/>
@@ -48,7 +48,7 @@ class Analysis extends React.Component {
                     <textarea cols={100} rows={5} value={this.state.output} readOnly />
                 </div>
                 <br/>
-                <input type="submit" value="Analyse" />
+                <input type="submit" value="Analyse" onClick={this.handleAnalysis} />
             </form>
         );
     }

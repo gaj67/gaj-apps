@@ -49,20 +49,20 @@ package gaj.apps.text.fd;
         wordCount++;
     }
 
-    //********************************************************
+    // ********************************************************
     /*package-private*/ static FetchSummary noPath(String word) {
         return new FetchSummaryImpl(word, false, false, "No file path found");
     }
 
-    /* package-private */ static FetchSummary fileFound(String word) {
+    /*package-private*/ static FetchSummary fileFound(String word) {
         return new FetchSummaryImpl(word, true, false, null);
     }
 
-    /* package-private */ static FetchSummary fileFetched(String word) {
+    /*package-private*/ static FetchSummary fileFetched(String word) {
         return new FetchSummaryImpl(word, false, true, null);
     }
 
-    /* package-private */ static FetchSummary fileNotFetched(String word, String error) {
+    /*package-private*/ static FetchSummary fileNotFetched(String word, String error) {
         return new FetchSummaryImpl(word, false, false, error);
     }
 

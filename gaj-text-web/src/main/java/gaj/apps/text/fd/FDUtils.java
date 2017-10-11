@@ -71,10 +71,12 @@ import gaj.apps.text.fd.parser.UnstructuredData;
 		}
 	}
 
-    /*package-private*/ static FetchSummary fetchWordFile(String word) {
+    /* package-private */ static FetchSummary fetchWordFile(String word) {
         Path file = FDUtils.getWordFilePath(word);
-        if (file == null) return FetchSummaryImpl.noPath(word);
-        if (Files.exists(file)) return FetchSummaryImpl.fileFound(word);  
+        if (file == null)
+            return FetchSummaryImpl.noPath(word);
+        if (Files.exists(file))
+            return FetchSummaryImpl.fileFound(word);
         try {
             Files.createDirectories(file.getParent());
             URL url = new URL(FD_URI + word);
@@ -82,17 +84,18 @@ import gaj.apps.text.fd.parser.UnstructuredData;
             connection.setRequestProperty("User-Agent", WEB_USER_AGENTS);
             try (InputStream fromURL = connection.getInputStream(); OutputStream toFile = Files.newOutputStream(file)) {
                 IOUtils.copy(fromURL, toFile);
-                return FetchSummaryImpl.fileFetched(word);  
+                return FetchSummaryImpl.fileFetched(word);
             }
         } catch (IOException e) {
-            return FetchSummaryImpl.fileNotFetched(word, e.getMessage());  
+            return FetchSummaryImpl.fileNotFetched(word, e.getMessage());
         }
     }
 
     /*package-private*/ static FetchSummary[] fetchWordFiles(String... words) {
         Map<String/* word */, FetchSummary> wordSummaries = new HashMap<>();
         for (String word : words) {
-            if (word == null || word.trim().isEmpty()) continue;
+            if (word == null || word.trim().isEmpty())
+                continue;
             FetchSummary wordSummary = wordSummaries.get(word);
             if (wordSummary == null) {
                 wordSummary = fetchWordFile(word);
