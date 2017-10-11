@@ -1,6 +1,13 @@
 import React from 'react'
 import axios from 'axios'
 
+const showAsString = function(value) {
+    if (value) {
+        return (typeof value === 'string') ? value : JSON.stringify(value, undefined, 2);
+    }
+    return '';
+};
+
 class Analysis extends React.Component {
     constructor(props) {
         super(props);
@@ -10,27 +17,23 @@ class Analysis extends React.Component {
         };
         
         this.handleChange = this.handleChange.bind(this);
-        this.handleAnalysis = this.handleAnalysis.bind(this);
+        this.tokeniseText = this.remoteCall.bind(this, 'api/text/tokenise/');
+        this.gatherWords = this.remoteCall.bind(this, 'api/fd/gather/');
     }
     
     handleChange(event) {
         this.setState({input: event.target.value});
     }
     
-    handleAnalysis(event) {
-        alert('Text submitted: ' + this.state.input);
+    remoteCall(uri, event) {
         event.preventDefault();
-        this.setState({output: this.state.input});
-        /*
         axios.get(
-            'api/tokenise?text=' + encodeURIComponent(this.state.input)
-        ).then(output => {
-            alert('Response received: ' + output);
-            this.setState({output: output});
+            uri + encodeURIComponent(this.state.input)
+        ).then(response => {
+            this.setState({output: response.data});
         }).catch(error => {
             console.log(error);
         }); 
-        */
     }
     
     render() {
@@ -41,14 +44,15 @@ class Analysis extends React.Component {
                     <br/>
                     <textarea cols={100} rows={5} value={this.state.input} onChange={this.handleChange} />
                 </div>
-                <div className={(this.state.output == '') ? 'show-none' : 'show-block'}>
+                <div className={this.state.output ? 'show-block' : 'show-none'}>
                     <br/>
                     <label>Analysed output:</label>
                     <br/>
-                    <textarea cols={100} rows={5} value={this.state.output} readOnly />
+                    <textarea cols={100} rows={20} value={showAsString(this.state.output)} readOnly />
                 </div>
                 <br/>
-                <input type="submit" value="Analyse" onClick={this.handleAnalysis} />
+                <input type="submit" value="Tokenise" onClick={this.tokeniseText} />
+                <input type="submit" value="Gather" onClick={this.gatherWords} />
             </form>
         );
     }

@@ -3,17 +3,16 @@ package gaj.apps.text.fd;
 /*package-private*/ class FetchSummaryImpl implements FetchSummary {
 
     private final String word;
-    private final boolean wasFound;
-    private final boolean wasFetched;
+    private final boolean isFound;
+    private final boolean isFetched;
     private final String error;
     private int wordCount = 1;
 
-    /*package-private*/ FetchSummaryImpl(String word, boolean wasFound, boolean wasFetched, String error) {
+    /*package-private*/ FetchSummaryImpl(String word, boolean isFound, boolean isFetched, String error) {
         this.word = word;
-        this.wasFound = wasFound;
-        this.wasFetched = wasFetched;
+        this.isFound = isFound;
+        this.isFetched = isFetched;
         this.error = error;
-
     }
 
     @Override
@@ -22,13 +21,13 @@ package gaj.apps.text.fd;
     }
 
     @Override
-    public boolean wasFound() {
-        return wasFound;
+    public boolean isFound() {
+        return isFound;
     }
 
     @Override
-    public boolean wasFetched() {
-        return wasFetched;
+    public boolean isFetched() {
+        return isFetched;
     }
 
     @Override

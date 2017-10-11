@@ -27,6 +27,14 @@
 
     <dependencies>
         <!-- Build Dependencies -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<!--
+		<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-databind</artifactId>
+    		<version>2.9.0</version>
+		</dependency>
+		-->
         <dependency>
             <!-- This automatically imports spring-boot-starter-logging -->
             <groupId>org.springframework.boot</groupId>
@@ -91,7 +99,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>0.0.27</version>
+                <version>1.6</version>
                 <configuration>
                     <workingDirectory>${basedir}</workingDirectory>
                 </configuration>
@@ -102,8 +110,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v5.5.0</nodeVersion>
-                            <npmVersion>3.5.3</npmVersion>
+                            <nodeVersion>v6.11.4</nodeVersion>
+                            <npmVersion>3.10.10</npmVersion>
                         </configuration>
                     </execution>
                     <execution>

@@ -18,7 +18,7 @@ public interface FetchSummary {
      * @return A value of true (or false) if the word definition file was (or
      *         was not) already found.
      */
-    boolean wasFound();
+    boolean isFound();
 
     /**
      * Indicates if the word definition file was just fetched.
@@ -26,7 +26,7 @@ public interface FetchSummary {
      * @return A value of true (or false) if the word definition file was (or
      *         was not) just fetched.
      */
-    boolean wasFetched();
+    boolean isFetched();
 
     /**
      * Indicates the reason why fetching the word definition file did not

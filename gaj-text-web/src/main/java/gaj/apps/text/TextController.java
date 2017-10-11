@@ -12,13 +12,13 @@ import gaj.text.tokenisation.TokeniserFactory;
 
 @Controller
 @RequestMapping("/api/text")
-public class AppController {
+public class TextController {
 
     @GetMapping(value = "/tokenise/{text}", produces = "application/json")
     public @ResponseBody String tokeniseText(@PathVariable String text) {
         Tokeniser tokeniser = TokeniserFactory.getTokeniser();
         SequenceTextSpan output = tokeniser.tokenise(text);
-		return output.toString();
+        return JSONHandler.toJSONString(output);
 	}
 
 }

@@ -22,6 +22,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import gaj.apps.text.fd.parser.SectionsHandler;
 import gaj.apps.text.fd.parser.UnstructuredData;
+import gaj.text.tokenisation.SequenceTextSpan;
+import gaj.text.tokenisation.TextSpan;
+import gaj.text.tokenisation.TextSpanType;
+import gaj.text.tokenisation.TokeniserFactory;
 
 /*package-private*/ class FDUtils {
 
@@ -71,7 +75,7 @@ import gaj.apps.text.fd.parser.UnstructuredData;
 		}
 	}
 
-    /* package-private */ static FetchSummary fetchWordFile(String word) {
+    /*package-private*/ static FetchSummary fetchWordFile(String word) {
         Path file = FDUtils.getWordFilePath(word);
         if (file == null)
             return FetchSummaryImpl.noPath(word);
@@ -113,6 +117,21 @@ import gaj.apps.text.fd.parser.UnstructuredData;
         return result;
     }
 
+    /*package-private*/ static FetchSummary[] fetchWordFiles(String text) {
+        SequenceTextSpan tokens = TokeniserFactory.getTokeniser().tokenise(text);
+        int numWords = 0;
+        for (TextSpan span : tokens.getSpans()) {
+            if (span.getType() == TextSpanType.ALPHABETIC) numWords++;
+        }
+        String[] words = new String[numWords];
+        numWords = 0;
+        for (TextSpan span : tokens.getSpans()) {
+            if (span.getType() == TextSpanType.ALPHABETIC) 
+                words[numWords++] = span.getText();
+        }
+        return fetchWordFiles(words);
+    }
+    
     /*package-private*/ static void parseWordFile(Path file, Consumer<UnstructuredData> consumer) {
         try (InputStream is = Files.newInputStream(file)) {
             SAXParserImpl parser = SAXParserImpl.newInstance(null);
