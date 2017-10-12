@@ -1,18 +1,15 @@
 package gaj.apps.text.fd.parser;
 
 import static gaj.text.handler.sax.StateSAXEventRuleFactory.newRule;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import gaj.text.handler.Action;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventType;
 import gaj.text.handler.sax.StateSAXEventRuleFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
@@ -30,10 +27,10 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
     private List<StateEventRule<State, SAXEvent>> rules = null;
 
-    private Map<String, Object> sectionData = null;
-    private Map<String, Object> segmentData = null;
-    private Map<String, Object> itemData = null;
-    private Map<String, Object> subitemData = null;
+    private UnstructuredData sectionData = null;
+    private UnstructuredData segmentData = null;
+    private UnstructuredData itemData = null;
+    private UnstructuredData subitemData = null;
 
     {
         setTrace(IS_TRACE);
@@ -176,29 +173,29 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void initSection() {
-        sectionData = new HashMap<>();
+        sectionData = UnstructuredData.create();
         clearTextBuffer();
         captureTextOff();
     }
 
     protected void getSectionWord() {
-        sectionData.put(SECTION_WORD_KEY, getTextBuffer());
+        sectionData.getMap().put(SECTION_WORD_KEY, getTextBuffer());
         clearTextBuffer();
         captureTextOff();
     }
 
     protected void initSegment() {
-        segmentData = new HashMap<>();
+        segmentData = UnstructuredData.create();
         clearTextBuffer();
         captureTextOff();
     }
 
     protected void getSegmentTag() {
-        String tag = (String) segmentData.get(SEGMENT_TAG_KEY);
+        String tag = (String) segmentData.getMap().get(SEGMENT_TAG_KEY);
         if (tag == null) {
-            segmentData.put(SEGMENT_TAG_KEY, getTextBuffer());
+            segmentData.getMap().put(SEGMENT_TAG_KEY, getTextBuffer());
         } else {
-            segmentData.put(SEGMENT_TAG_KEY, tag + getTextBuffer());
+            segmentData.getMap().put(SEGMENT_TAG_KEY, tag + getTextBuffer());
         }
         clearTextBuffer();
         captureTextOff();
@@ -206,10 +203,10 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
     protected void addSegmentWord() {
         @SuppressWarnings("unchecked")
-		List<String> words = (List<String>) segmentData.get(SEGMENT_WORDS_KEY);
+        List<String> words = (List<String>) segmentData.getMap().get(SEGMENT_WORDS_KEY);
         if (words == null) {
         	words = new ArrayList<>();
-            segmentData.put(SEGMENT_WORDS_KEY, words);
+            segmentData.getMap().put(SEGMENT_WORDS_KEY, words);
         }
         words.add(getTextBuffer());
         clearTextBuffer();
@@ -217,7 +214,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void initItem() {
-        itemData = new HashMap<>();
+        itemData = UnstructuredData.create();
         clearTextBuffer();
         captureTextOff();
     }
@@ -225,19 +222,18 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     protected void addItemExample() {
         String example = getTextBuffer();
         clearTextBuffer();
-        if (IS_TRACE)
-            System.out.printf("example=%s%n", example);
+        if (IS_TRACE) System.out.printf("example=%s%n", example);
         @SuppressWarnings("unchecked")
-        List<String> examples = (List<String>) itemData.get(EXAMPLES_KEY);
+        List<String> examples = (List<String>) itemData.getMap().get(EXAMPLES_KEY);
         if (examples == null) {
             examples = new ArrayList<>();
-            itemData.put(EXAMPLES_KEY, examples);
+            itemData.getMap().put(EXAMPLES_KEY, examples);
         }
         examples.add(example);
     }
 
     protected void initSubItem() {
-        subitemData = new HashMap<>();
+        subitemData = UnstructuredData.create();
         clearTextBuffer();
         captureTextOff();
     }
@@ -245,25 +241,24 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     protected void addSubItemExample() {
     	String example = getTextBuffer();
     	clearTextBuffer();
-        if (IS_TRACE)
-            System.out.printf("example=%s%n", example);
+        if (IS_TRACE) System.out.printf("example=%s%n", example);
         @SuppressWarnings("unchecked")
-        List<String> examples = (List<String>) subitemData.get(EXAMPLES_KEY);
+        List<String> examples = (List<String>) subitemData.getMap().get(EXAMPLES_KEY);
         if (examples == null) {
             examples = new ArrayList<>();
-            subitemData.put(EXAMPLES_KEY, examples);
+            subitemData.getMap().put(EXAMPLES_KEY, examples);
         }
         examples.add(example);
     }
 
     protected void addSubItem() {
         if (IS_TRACE) System.out.printf("subitemData=%s%n", subitemData);
-        if (!subitemData.isEmpty()) {
+        if (!subitemData.getMap().isEmpty()) {
         	@SuppressWarnings("unchecked")
-        	List<Map<String, Object>> subitems = (List<Map<String, Object>>) itemData.get(ITEM_SUBITEMS_KEY);
+            List<UnstructuredData> subitems = (List<UnstructuredData>) itemData.getMap().get(ITEM_SUBITEMS_KEY);
         	if (subitems == null) {
         		subitems = new ArrayList<>();
-        		itemData.put(ITEM_SUBITEMS_KEY, subitems);
+                itemData.getMap().put(ITEM_SUBITEMS_KEY, subitems);
         	}
         	subitems.add(subitemData);
         }
@@ -272,12 +267,12 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
     protected void addItem() {
         if (IS_TRACE) System.out.printf("itemData=%s%n", itemData);
-        if (!itemData.isEmpty()) {
+        if (!itemData.getMap().isEmpty()) {
         	@SuppressWarnings("unchecked")
-        	List<Map<String, Object>> items = (List<Map<String, Object>>) segmentData.get(SEGMENT_ITEMS_KEY);
+            List<UnstructuredData> items = (List<UnstructuredData>) segmentData.getMap().get(SEGMENT_ITEMS_KEY);
         	if (items == null) {
         		items = new ArrayList<>();
-        		segmentData.put(SEGMENT_ITEMS_KEY, items);
+                segmentData.getMap().put(SEGMENT_ITEMS_KEY, items);
         	}
         	items.add(itemData);
         }
@@ -285,35 +280,21 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addSegment() {
-        if (IS_TRACE)
-            System.out.printf("segmentData=%s%n", segmentData);
+        if (IS_TRACE) System.out.printf("segmentData=%s%n", segmentData);
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> segments = (List<Map<String, Object>>) sectionData.get(SECTION_SEGMENTS_KEY);
+        List<UnstructuredData> segments = (List<UnstructuredData>) sectionData.getMap().get(SECTION_SEGMENTS_KEY);
         if (segments == null) {
             segments = new ArrayList<>();
-            sectionData.put(SECTION_SEGMENTS_KEY, segments);
+            sectionData.getMap().put(SECTION_SEGMENTS_KEY, segments);
         }
         segments.add(segmentData);
         segmentData = null;
     }
 
     protected void addSection() {
-        if (IS_TRACE) {
-        	System.out.printf("sectionData=%s%n", sectionData);
-        }
+        if (IS_TRACE) System.out.printf("sectionData=%s%n", sectionData);
         if (sectionData != null) {
-        	final Map<String, Object> data = sectionData;
-        	consumer.accept(new UnstructuredData() {
-        		@Override
-        		public Map<String, Object> getData() {
-        			return data;
-        		}
-
-        		@Override
-        		public String toString() {
-        			return data.toString();
-        		}
-        	});
+            consumer.accept(sectionData);
             sectionData = null;
         }
     }

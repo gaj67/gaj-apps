@@ -1,4 +1,4 @@
-package gaj.apps.text;
+package gaj.apps.text.basic;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
