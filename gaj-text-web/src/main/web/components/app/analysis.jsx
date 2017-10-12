@@ -20,6 +20,7 @@ class Analysis extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.tokeniseText = this.remoteCall.bind(this, 'api/text/tokenise/');
         this.gatherWords = this.remoteCall.bind(this, 'api/fd/gather/');
+        this.parseDefinitions = this.remoteCall.bind(this, 'api/fd/parse/');
     }
     
     getOutputAsString() {
@@ -68,6 +69,7 @@ class Analysis extends React.Component {
                 <br/>
                 <input type="submit" value="Tokenise" onClick={this.tokeniseText} />
                 <input type="submit" value="Gather" onClick={this.gatherWords} />
+                <input type="submit" value="Definitions" onClick={this.parseDefinitions} />
             </form>
         );
     }
