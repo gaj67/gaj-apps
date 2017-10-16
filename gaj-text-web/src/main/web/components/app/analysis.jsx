@@ -24,6 +24,7 @@ class Analysis extends React.Component {
     }
     
     getOutputAsString() {
+        console.log("typeof output=" + (typeof this.state.output) + ", output-type=" + this.state.outputType);
         if (this.state.output && this.state.outputType && this.state.outputType != 'html') {
             return (typeof this.state.output === 'string') ? this.state.output : JSON.stringify(this.state.output, undefined, 2);
         }
@@ -35,7 +36,7 @@ class Analysis extends React.Component {
     }
     
     remoteCall(uri, event) {
-        //event.preventDefault();
+        event.preventDefault();
         this.setState({output: 'Loading...', outputType: 'string'});
         axios.get(
             uri + encodeURIComponent(this.state.input)

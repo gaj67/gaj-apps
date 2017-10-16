@@ -81,8 +81,8 @@ public class FDController {
 	 */
     @GetMapping(value = "/gather/{text}", produces = "application/json")
     public @ResponseBody String gatherWordDefinitionFiles(@PathVariable String text) {
-        FetchSummary[] wordSummaries = FDUtils.fetchWordDefinitionFiles(TextUtils.getUniqueWordsFromText(text));
-        return JSONHandler.toJSONString(wordSummaries);
+        FetchSummary[] output = FDUtils.fetchWordDefinitionFiles(TextUtils.getUniqueWordsFromText(text));
+        return JSONHandler.toJSONString(output);
     }
 
     /**
@@ -94,7 +94,7 @@ public class FDController {
     @GetMapping(value = "/parse/{text}", produces="application/json")
     public @ResponseBody String parseWordDefinitionFiles(@PathVariable String text) {
         UnstructuredData output = FDUtils.parseWordDefinitionFiles(TextUtils.getUniqueWordsFromText(text));
-        return output.toString();
+        return JSONHandler.toJSONString(output);
     }
 
 }
