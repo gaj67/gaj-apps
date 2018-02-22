@@ -1,4 +1,4 @@
-package apps.gaj.nc.analyser;
+package gaj.apps.simulator;
 
 /**
  * Simulates two computers repeatedly playing Naughts and Crosses against each
