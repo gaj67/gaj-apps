@@ -36,4 +36,15 @@ public abstract class MoverMethods {
         return optimalMoves.get((int) (Math.random() * optimalMoves.size()));
     }
 
+    /**
+     * Selects a random move from amongst the permissible moves.
+     */
+    public static @Nullable <M extends Move> M selectRandomMove(Set<M> moves) {
+        int idx = (int) (Math.random() * moves.size());
+        for (M move : moves) {
+            if (idx-- <= 0) return move;
+        }
+        return null;
+    }
+
 }

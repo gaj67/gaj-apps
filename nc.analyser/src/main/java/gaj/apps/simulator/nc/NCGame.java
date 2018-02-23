@@ -95,9 +95,6 @@ public class NCGame implements Game<NCMove> {
             || getMajorDiagCount(lastMove) == 3
             || getMinorDiagCount(lastMove) == 3;
         complete = won || moves.size() >= MAX_MOVES;
-        /* DEBUG */if (complete) {
-            int x = 0;
-        } /* DEBUG */
     }
 
     private int getRowCount(NCMove lastMove) {

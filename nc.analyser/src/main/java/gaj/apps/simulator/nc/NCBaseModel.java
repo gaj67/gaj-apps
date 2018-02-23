@@ -2,13 +2,13 @@ package gaj.apps.simulator.nc;
 
 import java.util.HashSet;
 import java.util.Set;
-import gaj.apps.simulator.MoverMethods;
+import gaj.apps.simulator.Model;
 
 /**
  * Evaluates the score of each move by playing the move and then scoring the
  * game.
  */
-public abstract class NCBaseModel extends MoverMethods<NCMove, NCGame> {
+public abstract class NCBaseModel implements Model<NCMove, NCGame> {
 
     /**
      * Computes a score for the given game, from the viewpoint of the last
@@ -21,11 +21,6 @@ public abstract class NCBaseModel extends MoverMethods<NCMove, NCGame> {
      */
     protected abstract double scoreGame(NCGame game);
 
-    @Override
-    public NCGame newGame() {
-        return new NCGame();
-    }
-
     /**
      * Obtains the set of valid moves that may be made next in the game. Scores
      * each move by first playing the move in the game, and then scoring the
@@ -33,19 +28,12 @@ public abstract class NCBaseModel extends MoverMethods<NCMove, NCGame> {
      */
     @Override
     public Set<NCMove> permissibleMoves(NCGame game) {
-        Set<NCMovePosition> availablePositions = new HashSet<>();
-        for (NCMovePosition pos : NCMovePosition.values()) {
-            availablePositions.add(pos);
-        }
-        for (NCMove move : game) {
-            availablePositions.remove(move.getPosition());
-        }
         Set<NCMove> moves = new HashSet<>();
         if (!game.isComplete()) {
             NCMoveType nextType = (game.numMoves() == 0)
                     ? NCMoveType.values()[(int) (Math.random() * 2)]
                     : game.getLastMove().getType().swapType();
-            for (NCMovePosition pos : availablePositions) {
+            for (NCMovePosition pos : getAvailablePositions(game)) {
                 NCMove move = new NCMove(nextType, pos);
                 try {
                     game.makeMove(move);
@@ -58,6 +46,17 @@ public abstract class NCBaseModel extends MoverMethods<NCMove, NCGame> {
             }
         }
         return moves;
+    }
+
+    private Set<NCMovePosition> getAvailablePositions(NCGame game) {
+        Set<NCMovePosition> availablePositions = new HashSet<>();
+        for (NCMovePosition pos : NCMovePosition.values()) {
+            availablePositions.add(pos);
+        }
+        for (NCMove move : game) {
+            availablePositions.remove(move.getPosition());
+        }
+        return availablePositions;
     }
 
 }

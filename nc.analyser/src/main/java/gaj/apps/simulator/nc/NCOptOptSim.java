@@ -2,6 +2,7 @@ package gaj.apps.simulator.nc;
 
 import gaj.apps.simulator.Game;
 import gaj.apps.simulator.ModelSimulator;
+import gaj.apps.simulator.MoverMethods;
 import gaj.apps.simulator.Simulator;
 
 /**
@@ -13,7 +14,7 @@ import gaj.apps.simulator.Simulator;
  * human to evaluate all game moves in advance, and formulate the optimal
  * strategies theoretically.
  */
-public class NCSim 
+public class NCOptOptSim 
 {
     private static final int DEFAULT_NUM_SIMULATIONS = 100;
 
@@ -21,7 +22,7 @@ public class NCSim
     public static void main(String... args) {
         final int numSimulations = (args.length == 0) ? DEFAULT_NUM_SIMULATIONS : Integer.parseInt(args[0]);
         NCSimpleModel model = new NCSimpleModel(0.9, 0.1);
-        Simulator simulator = new ModelSimulator<>(model);
+        Simulator simulator = new ModelSimulator<>(NCGame::new, model, MoverMethods::selectScoredMove);
         for (int i = 0; i < numSimulations; i++) {
             Game game = simulator.simulate();
             double score = simulator.train(game);
