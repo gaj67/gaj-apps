@@ -62,7 +62,7 @@ public class NCGame implements Game<NCMove> {
     }
 
     @Override
-    public void makeMove(NCMove move) {
+    public void makeMove(NCMove move) throws IllegalArgumentException {
         if (isComplete()) {
             throw new IllegalArgumentException("The game is already complete");
         }
@@ -84,7 +84,9 @@ public class NCGame implements Game<NCMove> {
         if (moves.isEmpty()) return null;
         won = false;
         complete = false;
-        return moves.removeLast();
+        NCMove lastMove = moves.removeLast();
+        board[lastMove.getPosition().ordinal()] = null;
+        return lastMove;
     }
 
     private void checkStatus(NCMove lastMove) {
@@ -93,6 +95,9 @@ public class NCGame implements Game<NCMove> {
             || getMajorDiagCount(lastMove) == 3
             || getMinorDiagCount(lastMove) == 3;
         complete = won || moves.size() >= MAX_MOVES;
+        /* DEBUG */if (complete) {
+            int x = 0;
+        } /* DEBUG */
     }
 
     private int getRowCount(NCMove lastMove) {
@@ -115,9 +120,24 @@ public class NCGame implements Game<NCMove> {
         int count = 1;
         NCMovePosition pos = lastMove.getPosition().move(right, down);
         if (lastMove.getType() == board[pos.ordinal()]) count++;
-        pos = lastMove.getPosition().move(right, down);
+        pos = pos.move(right, down);
         if (lastMove.getType() == board[pos.ordinal()]) count++;
         return count;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        for (NCMoveType type : board) {
+            buf.append((type == null) ? "." : (type == NCMoveType.Cross) ? "x" : "o");
+        }
+        buf.append(" [");
+        for (NCMove move : moves) {
+            buf.append(move.getPosition().ordinal());
+        }
+        buf.append("]");
+        buf.append(won ? "*" : "");
+        return buf.toString();
     }
 
 }

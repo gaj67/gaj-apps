@@ -10,7 +10,7 @@ public interface Move {
      * 
      * @return The score of the move.
      */
-    default double score() {
+    default double getScore() {
         return 0;
     }
 

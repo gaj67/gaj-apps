@@ -5,8 +5,7 @@ import org.eclipse.jdt.annotation.Nullable;
 /**
  * Specifies a single game of zero, one or more moves.
  * 
- * @param <M>
- *            - The type of move.
+ * @param <M> - The type of move.
  */
 public interface Game<M extends Move> extends Iterable<M> {
 
@@ -58,12 +57,11 @@ public interface Game<M extends Move> extends Iterable<M> {
     /**
      * Makes the given move in the game.
      * 
-     * @param move
-     *            - The new move.
+     * @param move - The new move.
      * @throws IllegalArgumentException
      *             if the game is already complete or if the move is not valid.
      */
-    void makeMove(M move);
+    void makeMove(M move) throws IllegalArgumentException;
 
     /**
      * Retracts the last move made in the game, if any.

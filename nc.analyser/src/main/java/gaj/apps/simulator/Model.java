@@ -6,8 +6,8 @@ import org.eclipse.jdt.annotation.Nullable;
 /**
  * Denotes a trainable model of a game player.
  * 
- * @param <M>
- *            - The type of game move.
+ * @param <M> - The type of game move.
+ * @param <G> - The type of game.
  */
 public interface Model<M extends Move, G extends Game<M>> {
 
@@ -19,8 +19,9 @@ public interface Model<M extends Move, G extends Game<M>> {
     G newGame();
 
     /**
-     * Obtains the set of valid moves that may be made next in the game.
+     * Obtains (possibly a subset of) the set of valid moves that may be made next in the game.
      * 
+     * @param game - The current game.
      * @return A (possibly empty) set of moves.
      */
     Set<M> permissibleMoves(G game);
@@ -29,8 +30,9 @@ public interface Model<M extends Move, G extends Game<M>> {
      * Updates the model based upon learning from the current game.
      * 
      * @param game - The training sample game.
+     * @return An averaged error score for the model after training.
      */
-    void train(G game);
+    double train(G game);
 
     /**
      * Selects a move from the given set of moves according to inbuilt model

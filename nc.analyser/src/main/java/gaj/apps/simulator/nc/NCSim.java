@@ -1,4 +1,8 @@
-package gaj.apps.simulator;
+package gaj.apps.simulator.nc;
+
+import gaj.apps.simulator.Game;
+import gaj.apps.simulator.ModelSimulator;
+import gaj.apps.simulator.Simulator;
 
 /**
  * Simulates two computers repeatedly playing Naughts and Crosses against each
@@ -9,17 +13,21 @@ package gaj.apps.simulator;
  * human to evaluate all game moves in advance, and formulate the optimal
  * strategies theoretically.
  */
-public class App 
+public class NCSim 
 {
     private static final int DEFAULT_NUM_SIMULATIONS = 100;
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static void main(String... args) {
         final int numSimulations = (args.length == 0) ? DEFAULT_NUM_SIMULATIONS : Integer.parseInt(args[0]);
-        Simulator simulator = new Simulator();
+        NCSimpleModel model = new NCSimpleModel(0.9, 0.1);
+        Simulator simulator = new ModelSimulator<>(model);
         for (int i = 0; i < numSimulations; i++) {
             Game game = simulator.simulate();
-            simulator.train(game);
+            double score = simulator.train(game);
+            System.out.printf("Game: %s, Score: %f%n", game, score);
         }
+        System.out.printf("Model: %s%n", model);
     }
 
 }
