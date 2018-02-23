@@ -2,13 +2,13 @@ package gaj.apps.simulator.nc;
 
 import java.util.HashSet;
 import java.util.Set;
-import gaj.apps.simulator.ScoredModel;
+import gaj.apps.simulator.MoverMethods;
 
 /**
  * Evaluates the score of each move by playing the move and then scoring the
  * game.
  */
-public abstract class NCBaseModel extends ScoredModel<NCMove, NCGame> {
+public abstract class NCBaseModel extends MoverMethods<NCMove, NCGame> {
 
     /**
      * Computes a score for the given game, from the viewpoint of the last

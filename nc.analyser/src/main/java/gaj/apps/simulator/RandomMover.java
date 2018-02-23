@@ -6,20 +6,24 @@ import java.util.Set;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * Assumes that the model can score each move as it is played in a game.
- * The model aims to always play optimally-score moves.
+ * This mover aims to play random moves.
  * 
  * @param <M> - The type of game move.
- * @param <G> - The type of game.
  */
-public abstract class ScoredModel<M extends Move, G extends Game<M>> implements Model<M, G> {
+public class RandomMover<M extends Move> implements Mover<M> {
 
     /**
-     * Selects an optimally-scored move from amongst the permissible moves. If
-     * there are multiple optimal moves, then one is selected at random.
+     * Selects an random move from amongst the permissible moves.
      */
     @Override
     public @Nullable M selectMove(Set<M> moves) {
+        return selectRandomMove(moves);
+    }
+
+    /**
+     * Selects an random move from amongst the permissible moves.
+     */
+    public static @Nullable <M extends Move> M selectRandomMove(Set<M> moves) {
         if (moves.isEmpty()) return null;
         double score = Double.NEGATIVE_INFINITY;
         List<M> optimalMoves = new ArrayList<>(moves.size());

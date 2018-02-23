@@ -8,21 +8,31 @@ import java.util.Set;
  * @param <M> - The type of game move to be simulated.
  * @param <G> - The type of game to be simulated.
  */
-public class ModelSimulator<M extends Move, G extends Game<M>> implements Simulator<M, G> {
+public class ModelSimulator<M extends Move, G extends Game<M>> implements Simulator<G> {
 
+    private final Creator<G> creator;
     private final Model<M, G> model;
+    private Mover<M>[] movers;
 
-    public ModelSimulator(Model<M, G> model) {
+    public ModelSimulator(Creator<G> creator, Model<M, G> model, @SuppressWarnings("unchecked") Mover<M>... movers) {
+        this.creator = creator;
         this.model = model;
+        this.movers = movers;
+        if (movers.length == 0) {
+            throw new IllegalArgumentException("Require at least one game mover");
+        }
     }
 
     @Override
     public G simulate() {
-        G game = model.newGame();
+        int moverIdx = 0;
+        G game = creator.newGame();
         while (!game.isComplete()) {
             Set<M> moves = model.permissibleMoves(game);
             if (!moves.isEmpty()) {
-                game.makeMove(model.selectMove(moves));
+                Mover<M> mover = movers[moverIdx];
+                moverIdx = (moverIdx + 1) % movers.length;
+                game.makeMove(mover.selectMove(moves));
             }
         }
         return game;

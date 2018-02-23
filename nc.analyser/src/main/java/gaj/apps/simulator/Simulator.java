@@ -1,12 +1,11 @@
 package gaj.apps.simulator;
 
 /**
- * Describes a generic simulator for a game.
+ * Denotes a generic simulator for a game.
  * 
- * @param <M> - The type of game move to be simulated.
  * @param <G> - The type of game to be simulated.
  */
-public interface Simulator<M extends Move, G extends Game<M>> {
+public interface Simulator<G extends Game<?>> {
 
     /**
      * Simulates one complete game, from start to finish.
